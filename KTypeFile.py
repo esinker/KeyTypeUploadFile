@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, format='[%(asctime)s]%(message)s ')
 
 def press_key(key):
     global STOP_TYPING
+    logging.debug(f"您按下了{key}")
     if key == keyboard.Key.esc:
         logging.info(f"您按下了ESC键")
         if key == keyboard.Key.esc:
@@ -23,7 +24,7 @@ def press_key(key):
 
 def release_key(key):
     global IS_PAUSE
-    if key == keyboard.Key.pause:
+    if key == PAUSE_KEY:
         if not IS_PAUSE:
             IS_PAUSE = True
             logging.info(f"程序暂停运行")
@@ -75,10 +76,11 @@ def type_str(in_str,
     """
     listen_key()
     kb = keyboard.Controller()
-    logging.warning("开始切分base64字符串，"
-                    "程序书写时请确保将光标移动到要输入的编辑器中,并确保输入法一定是英文状态（大写键关闭）。"
-                    "当第一次按下Pause时开始自动书写，"
-                    "第二次按下Pause时程序将暂停书写，以此类推。"
+    logging.warning("开始切分字符串，"
+                    "程序书写时请确保将光标移动到要输入的编辑器中,并确保远程输入法与要传输的字符保持一致"
+                    "传输英文一定是英文状态（大写键关闭）传输中文一定用中文输入法，不可混传。"
+                    f"当第一次按下{PAUSE_KEY}时开始自动书写，"
+                    f"第二次按下{PAUSE_KEY}时程序将暂停书写，以此类推。"
                     "当按下Esc时程序退出。")
     global IS_PAUSE, STOP_TYPING
     for i in spilt_list(in_str, one_step_len):
@@ -88,7 +90,7 @@ def type_str(in_str,
         log_times = 0
         while IS_PAUSE and not STOP_TYPING:
             if log_times == 0:
-                logging.info("目前程序是暂停状态按下Pause开始运行，开始运行前请仔细阅读上面文字")
+                logging.info(f"目前程序是暂停状态按下{PAUSE_KEY}开始运行，开始运行前请仔细阅读上面文字")
                 log_times += 1
             time.sleep(1)
         time.sleep(step_interval)
@@ -102,7 +104,8 @@ def type_file(from_file_path, one_step_len=30, step_interval=0.2):
     type_str(b4str, one_step_len=one_step_len, step_interval=step_interval)
 
 
-
+# 暂停键 默认是左ctrl键，可以自己定义
+PAUSE_KEY = keyboard.Key.ctrl_l
 
 if __name__ == '__main__':
     # 调用 type_file 方法传输文件，文件最好压缩下，能节省时间
