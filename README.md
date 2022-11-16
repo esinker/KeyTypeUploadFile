@@ -29,7 +29,7 @@
 
 传入到远程电脑后如果是windows 可以用powershell 脚本（程序附带了一个小脚本，可以用type_str方法传到远程服务器）读取base64字符串将其转换成文件
 # 使用方法
-##调用 type_file 方法传输文件，文件最好压缩下，能节省时间
+## 调用 type_file 方法传输文件，文件最好压缩下，能节省时间
 ```python
     src_file_path = 'testfile.zip'
     type_file(src_file_path, one_step_len=30, step_interval=0.2)
